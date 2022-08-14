@@ -10,9 +10,10 @@ module.exports = async (req, res, next) => {
         return res.json(upload.data);
     } catch (error) {
         if (error.code === "ECONNREFUSED") {
-            return res
-                .status(500)
-                .json({ status: "error", message: "service unavailable" });
+            return res.status(500).json({
+                meta: { status: "error", message: "service unavailable" },
+                data: [],
+            });
         }
 
         const { status, data } = error.response;
