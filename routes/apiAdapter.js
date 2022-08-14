@@ -1,11 +1,10 @@
 const axios = require("axios");
-require("dotenv").config();
 
-const TIME_OUT = process.env.TIME_OUT;
+const { TIMEOUT } = process.env;
 
 module.exports = (baseUrl) => {
     return axios.create({
-        baseUrl: baseUrl,
-        timeout: parseInt(TIME_OUT) || 5000,
+        baseURL: baseUrl,
+        timeout: parseInt(TIMEOUT),
     });
 };

@@ -10,23 +10,22 @@ const mediaRouter = require("./routes/media");
 const courseRouter = require("./routes/courses");
 const paymentRouter = require("./routes/payments");
 const orderRouter = require("./routes/orders");
-const { SUCCESS, ERROR } = require("./utils/response");
 
 const app = express();
 
 app.use(logger("common"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: false, limit: "50mb" }));
 app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/orderRouter", orderRouter);
-app.use("/payments", paymentRouter);
-app.use("/media", mediaRouter);
-app.use("/courses", courseRouter);
-app.use("/users", usersRouter);
-app.use("/", indexRouter);
+app.use("/api/v1/orderRouter", orderRouter);
+app.use("/api/v1/payments", paymentRouter);
+app.use("/api/v1/media", mediaRouter);
+app.use("/api/v1/courses", courseRouter);
+app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/", indexRouter);
 
 // end point not found handling.
 app.use((req, res, next) => {
