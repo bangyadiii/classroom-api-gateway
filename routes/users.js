@@ -1,11 +1,7 @@
 var express = require("express");
 var router = express.Router();
-
-/* GET users listing. */
-router.get("/", function (req, res, next) {
-    res.status(200).json({
-        message: "respond with a resource",
-    });
-});
+const { register, login } = require("./handler/users/index");
+// register
+router.post("/register", register);
 
 module.exports = router;

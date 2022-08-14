@@ -1,10 +1,7 @@
 var express = require("express");
+const mediaHandler = require("./handler/media");
 var router = express.Router();
 
-router.get("/", function (req, res, next) {
-    res.status(200).json({
-        message: "respond with a resource",
-    });
-});
+router.get("/", mediaHandler.getMedia);
 
 module.exports = router;

@@ -1,10 +1,9 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const { SUCCESS, ERROR } = require("../utils/response");
 
 router.get("/", function (req, res, next) {
-    res.status(200).json({
-        message: "respond with a resource",
-    });
+    return res.status(200).json({ message: "course" });
 });
 
 module.exports = router;

@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const cors = require("cors");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -9,6 +10,7 @@ const mediaRouter = require("./routes/media");
 const courseRouter = require("./routes/courses");
 const paymentRouter = require("./routes/payments");
 const orderRouter = require("./routes/orders");
+const { SUCCESS, ERROR } = require("./utils/response");
 
 const app = express();
 
@@ -16,6 +18,7 @@ app.use(logger("common"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/orderRouter", orderRouter);
@@ -24,5 +27,27 @@ app.use("/media", mediaRouter);
 app.use("/courses", courseRouter);
 app.use("/users", usersRouter);
 app.use("/", indexRouter);
+
+// end point not found handling.
+app.use((req, res, next) => {
+    const error = new Error("Not found.");
+    error.status = 404;
+    next(error);
+});
+
+// error handling
+app.use((error, req, res, next) => {
+    console.log(error);
+    const statusCode = error.status || 500;
+    const message = error.message;
+
+    return res.status(statusCode).json({
+        meta: {
+            succes: false,
+            message: message,
+        },
+        data: [],
+    });
+});
 
 module.exports = app;
