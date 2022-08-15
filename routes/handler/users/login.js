@@ -17,14 +17,14 @@ module.exports = async (req, res, next) => {
         const user = response.data.data.user;
         const accessToken = jwt.sign(
             {
-                data: { id: user.id, name: user.name },
+                data: { id: user.id, email: user.email },
             },
             JWT_SECRET_TOKEN,
             { expiresIn: JWT_SECRET_TOKEN_EXPIRED }
         );
         const refreshToken = jwt.sign(
             {
-                data: { id: user.id, name: user.name },
+                data: { id: user.id, email: user.email },
             },
             JWT_REFRESH_TOKEN,
             { expiresIn: JWT_REFRESH_TOKEN_EXPIRED }
