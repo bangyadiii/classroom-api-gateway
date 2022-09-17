@@ -5,7 +5,6 @@ const logger = require("morgan");
 const cors = require("cors");
 
 // router
-const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const mediaRouter = require("./routes/media");
 const courseRouter = require("./routes/courses");
@@ -38,7 +37,6 @@ app.use("/api/v1/mentors", mentorRouter);
 app.use("api/v1/lessons", lessonRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/users", usersRouter);
-app.use("/api/v1/", indexRouter);
 
 // end point not found handling.
 app.use((req, res, next) => {
