@@ -4,15 +4,14 @@ const { URL_SERVICE_MEDIA } = process.env;
 const api = apiAdapter(URL_SERVICE_MEDIA);
 
 module.exports = async (req, res, next) => {
-    //
     try {
         const upload = await api.delete(`/media/${req.params.id}`, req.body);
-        return res.json(upload.data);
+        return res.status(upload.status).json(upload.data);
     } catch (error) {
         if (error.code === "ECONNREFUSED") {
             return res
                 .status(500)
-                .json({ status: "error", message: "service unavailable" });
+                .json({ status: "error", message: "service media unavailable" });
         }
 
         const { status, data } = error.response;

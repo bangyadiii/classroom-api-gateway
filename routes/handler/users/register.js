@@ -16,6 +16,7 @@ module.exports = async (req, res, next) => {
                 data: [],
             });
         }
+        console.log("error response", error);
         const { status, data } = error.response;
         return res.status(status).json(data);
     }

@@ -1,13 +1,13 @@
+const { URL_SERVICE_COURSE } = process.env;
 const apiAdapter = require("../../apiAdapter");
-
-const { URL_SERVICE_MEDIA } = process.env;
-const api = apiAdapter(URL_SERVICE_MEDIA);
+const api = apiAdapter(URL_SERVICE_COURSE);
 
 module.exports = async (req, res, next) => {
-    //
     try {
-        const upload = await api.post("/media", req.body);
-        return res.status(upload.status).json(upload.data);
+        const courseId = req.params.id;
+        const response = await api.put(`/api/v1/courses/${courseId}`, req.body);
+
+        return res.status(response.status).json(response.data);
     } catch (error) {
         if (error.code === "ECONNREFUSED") {
             return res.status(500).json({

@@ -6,12 +6,13 @@ const api = apiAdapter(URL_SERVICE_MEDIA);
 module.exports = async (req, res) => {
     try {
         const media = await api.get("/media");
-        return res.json(media.data);
+        return res.status(media.status).json(media.data);
     } catch (error) {
         if (error.code === "ECONNREFUSED") {
-            return res
-                .status(500)
-                .json({ status: "error", message: "service unavailable" });
+            return res.status(500).json({
+                status: "error",
+                message: "service media unavailable",
+            });
         }
 
         const { status, data } = error.response;

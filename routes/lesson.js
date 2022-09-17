@@ -1,19 +1,19 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
 const {
     create,
     update,
-    deleteCourse,
-    getAllList,
-    getById,
-} = require("./handler/courses/");
+    deleteLessons,
+    getAll,
+    findById,
+} = require("./handler/lesson/");
 const verifyToken = require("../middleware/verifyToken");
 const can = require("../middleware/permissions");
 
 router.put("/:id", verifyToken, can("admin"), update);
-router.delete("/:id", verifyToken, can("admin"), deleteCourse);
-router.get("/:id", getById);
+router.delete("/:id", verifyToken, can("admin"), deleteLessons);
+router.get("/:id", findById);
 router.post("/", verifyToken, can("admin"), create);
-router.get("/", getAllList);
+router.get("/", getAll);
 
 module.exports = router;

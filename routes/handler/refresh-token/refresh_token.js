@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const apiAdapter = require("../../apiAdapter");
 const api = apiAdapter(URL_SERVICE_USER);
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
     try {
         const { refresh_token, email } = req.body;
         if (!refresh_token || !email) {
