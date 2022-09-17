@@ -13,7 +13,7 @@ const can = require("../middleware/permissions");
 router.put("/:id", verifyToken, can("admin"), update);
 router.delete("/:id", verifyToken, can("admin"), deleteLessons);
 router.get("/:id", findById);
-router.post("/", verifyToken, can("admin"), create);
-router.get("/", getAll);
+router.post("/", verifyToken, can("student", "admin"), create);
+router.get("/", verifyToken, can("student", "admin"), getAll);
 
 module.exports = router;
