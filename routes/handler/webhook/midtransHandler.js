@@ -1,16 +1,20 @@
-const URL_SERVICE_COURSE = process.env.URL_SERVICE_COURSE;
+require("dotenv").config();
 const { ERROR } = require("../../../helpers/response-formatter");
 const apiAdapter = require("../../apiAdapter");
-const api = apiAdapter(URL_SERVICE_COURSE);
+const { URL_SERVICE_ORDER_PAYMET } = process.env;
 
-module.exports = async (req, res, next) => {
+const api = apiAdapter(URL_SERVICE_ORDER_PAYMET);
+
+module.exports = async (req, res) => {
     try {
-        const response = await api.post("/api/v1/courses", req.body);
-        return res.status(response.status).json(response.data);
+        const response = await api.post(`/api/v1/notifications`, req.body);
+        const result = response.data;
+
+        return res.status(200).json(result);
     } catch (error) {
         console.log("Error", error.message);
         if (error.code === "ECONNREFUSED") {
-            return ERROR(res, 500, "Service Course Unavailable");
+            return ERROR(res, 500, "Service User Unavailable");
         }
         if (error.response) {
             const data = error?.response?.data;

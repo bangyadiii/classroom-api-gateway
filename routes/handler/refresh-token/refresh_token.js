@@ -5,6 +5,7 @@ const {
     URL_SERVICE_USER,
 } = process.env;
 const jwt = require("jsonwebtoken");
+const { ERROR, SUCCESS } = require("../../../helpers/response-formatter");
 const apiAdapter = require("../../apiAdapter");
 const api = apiAdapter(URL_SERVICE_USER);
 
@@ -12,44 +13,36 @@ module.exports = async (req, res) => {
     try {
         const { refresh_token, email } = req.body;
         if (!refresh_token || !email) {
-            return res
-                .status(400)
-                .json({ status: "error", message: "input invalid" });
+            return ERROR(res, 400, "Input is invalid");
         }
         const result = await api.get("/api/v1/refresh-token", {
             params: { refresh_token: refresh_token },
         });
         jwt.verify(refresh_token, JWT_REFRESH_TOKEN, (error, decoded) => {
             if (error) {
-                return res
-                    .status(403)
-                    .json({ status: "error", message: error.message });
+                return ERROR(res, 403, "FORBIDDEN", error.message);
             }
-            console.log(decoded.data.email);
             if (email !== decoded.data.email) {
-                return res
-                    .status(403)
-                    .json({ status: "error", message: "email is not valid" });
+                return ERROR(res, 400, "FORBIDDEN", "Email is not valid");
             }
             const token = jwt.sign({ data: decoded.data }, JWT_SECRET_TOKEN, {
                 expiresIn: JWT_SECRET_TOKEN_EXPIRED,
             });
-            return res.status(200).json({
-                status: "success",
-                message: "berhasil mendapatkan token",
-                data: {
-                    access_token: token,
-                },
+            return SUCCESS(res, 200, "Berhasil mendapatkan token", {
+                access_token: token,
             });
         });
     } catch (error) {
+        console.log("Error", error.message);
         if (error.code === "ECONNREFUSED") {
-            return res
-                .status(500)
-                .json({ status: "error", message: "service unavailable." });
+            return ERROR(res, 500, "Service User Unavailable");
         }
-
-        const { status, data } = error.response;
-        return res.status(status).json({ status: "error", message: data });
+        if (error.response) {
+            const data = error?.response?.data;
+            const status = error?.response?.status;
+            return ERROR(res, status, data);
+        } else {
+            return ERROR(res, 500, error.message);
+        }
     }
 };

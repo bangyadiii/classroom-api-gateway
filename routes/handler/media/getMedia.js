@@ -1,3 +1,4 @@
+const { ERROR } = require("../../../helpers/response-formatter");
 const apiAdapter = require("../../apiAdapter");
 const { URL_SERVICE_MEDIA } = process.env;
 
@@ -8,14 +9,16 @@ module.exports = async (req, res) => {
         const media = await api.get("/media");
         return res.status(media.status).json(media.data);
     } catch (error) {
+        console.log("Error", error.message);
         if (error.code === "ECONNREFUSED") {
-            return res.status(500).json({
-                status: "error",
-                message: "service media unavailable",
-            });
+            return ERROR(res, 500, "Service Media Unavailable");
         }
-
-        const { status, data } = error.response;
-        return res.status(status).json(data);
+        if (error.response) {
+            const data = error?.response?.data;
+            const status = error?.response?.status;
+            return ERROR(res, status, data);
+        } else {
+            return ERROR(res, 500, error.message);
+        }
     }
 };

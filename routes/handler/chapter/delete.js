@@ -1,4 +1,5 @@
 const URL_SERVICE_COURSE = process.env.URL_SERVICE_COURSE;
+const { ERROR } = require("../../../helpers/response-formatter");
 const apiAdapter = require("../../apiAdapter");
 const api = apiAdapter(URL_SERVICE_COURSE);
 
@@ -8,17 +9,16 @@ module.exports = async (req, res, next) => {
         const response = await api.delete(`/api/v1/chapters/${id}`);
         return res.status(response.status).json(response.data);
     } catch (error) {
+        console.log("Error", error.message);
         if (error.code === "ECONNREFUSED") {
-            return res.status(500).json({
-                meta: {
-                    status: "error",
-                    message: "service course unavailable",
-                },
-                data: [],
-            });
+            return ERROR(res, 500, "Service Course Unavailable");
         }
-
-        const { status, data } = error.response;
-        return res.status(status).json(data);
+        if (error.response) {
+            const data = error?.response?.data;
+            const status = error?.response?.status;
+            return ERROR(res, status, data);
+        } else {
+            return ERROR(res, 500, error.message);
+        }
     }
 };

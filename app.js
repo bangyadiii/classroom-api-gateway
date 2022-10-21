@@ -3,6 +3,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const { ERROR, SUCCESS } = require("./helpers/response-formatter");
 
 // router
 const usersRouter = require("./routes/users");
@@ -11,11 +12,11 @@ const courseRouter = require("./routes/courses");
 const imageCourseRouter = require("./routes/imageCourse");
 const chapterRouter = require("./routes/chapter");
 const paymentRouter = require("./routes/payments");
-const orderRouter = require("./routes/orders");
+// const orderRouter = require("./routes/orders");
 const mentorRouter = require("./routes/mentor");
 const reviewRouter = require("./routes/review");
 const lessonRouter = require("./routes/lesson");
-
+const webhookRouter = require("./routes/webhook");
 const verifyToken = require("./middleware/verifyToken");
 const can = require("./middleware/permissions");
 const app = express();
@@ -27,13 +28,14 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api/v1/orderRouter", verifyToken, orderRouter);
+// app.use("/api/v1/orderRouter", verifyToken, orderRouter);
 app.use("/api/v1/image-course", verifyToken, can("admin"), imageCourseRouter);
 app.use("/api/v1/payments", verifyToken, paymentRouter);
 app.use("/api/v1/media", mediaRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/chapters", chapterRouter);
 app.use("/api/v1/mentors", mentorRouter);
+app.use("/api/v1/webhook", webhookRouter);
 app.use("api/v1/lessons", lessonRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/users", usersRouter);
@@ -51,13 +53,7 @@ app.use((error, req, res, next) => {
     const statusCode = error.status || 500;
     const message = error.message;
 
-    return res.status(statusCode).json({
-        meta: {
-            succes: false,
-            message: message,
-        },
-        data: [],
-    });
+    return ERROR(res, statusCode, message);
 });
 
 module.exports = app;

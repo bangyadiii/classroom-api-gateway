@@ -4,7 +4,7 @@ const { URL_SERVICE_USER } = process.env;
 
 const api = apiAdapter(URL_SERVICE_USER);
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
     const id = req.params.id;
     try {
         const response = await api.put(`/api/v1/auth/${id}`, req.body);
@@ -13,13 +13,16 @@ module.exports = async (req, res, next) => {
 
         return res.status(200).json(result);
     } catch (error) {
+        console.log("Error", error.message);
         if (error.code === "ECONNREFUSED") {
-            return res.status(500).json({
-                meta: { status: "error", message: "Service Unavailable." },
-                data: [],
-            });
+            return ERROR(res, 500, "Service User Unavailable");
         }
-        const { status, data } = error.response;
-        return res.status(status).json(data);
+        if (error.response) {
+            const data = error?.response?.data;
+            const status = error?.response?.status;
+            return ERROR(res, status, data);
+        } else {
+            return ERROR(res, 500, error.message);
+        }
     }
 };
