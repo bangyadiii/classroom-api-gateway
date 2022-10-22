@@ -10,14 +10,10 @@ module.exports = async (req, res, next) => {
     } catch (error) {
         console.log("Error", error.message);
         if (error.code === "ECONNREFUSED") {
-            return ERROR(res, 500, "Service Course Unavailable");
+            return ERROR(res, 500, "Service Media Unavailable");
         }
-        if (error.response) {
-            const data = error?.response?.data;
-            const status = error?.response?.status;
-            return ERROR(res, status, data);
-        } else {
-            return ERROR(res, 500, error.message);
-        }
+        const data = error?.response?.data ?? error.message;
+        const status = error?.response?.status ?? 500;
+        return res.status(status).json(data);
     }
 };
