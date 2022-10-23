@@ -31,11 +31,12 @@ module.exports = async (req, res) => {
             { expiresIn: JWT_REFRESH_TOKEN_EXPIRED }
         );
 
-        await api.post("/api/v1/refresh-token", {
+        const payload = {
             refresh_token: refreshToken,
             user_id: user.id,
-        });
-        return SUCCESS(res, 200, "Login succuss", {
+        };
+        const resp = await api.post("/api/v1/refresh-token", payload);
+        return SUCCESS(res, resp.status, "Login succuss", {
             access_token: accessToken,
             refreshToken: refreshToken,
         });

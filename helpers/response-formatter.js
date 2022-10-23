@@ -1,5 +1,5 @@
 const SUCCESS = (res, code = 500, message, data = null) => {
-    return res.status(500).json({
+    return res.status(code).json({
         meta: {
             success: true,
             code: code,

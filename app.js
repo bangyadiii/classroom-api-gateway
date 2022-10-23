@@ -36,7 +36,7 @@ app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/chapters", chapterRouter);
 app.use("/api/v1/mentors", mentorRouter);
 app.use("/api/v1/webhook", webhookRouter);
-app.use("api/v1/lessons", lessonRouter);
+app.use("/api/v1/lessons", lessonRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/users", usersRouter);
 

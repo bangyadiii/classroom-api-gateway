@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
         if (!refresh_token || !email) {
             return ERROR(res, 400, "Input is invalid");
         }
-        const result = await api.get("/api/v1/refresh-token", {
+        await api.get("/api/v1/refresh-token", {
             params: { refresh_token: refresh_token },
         });
         jwt.verify(refresh_token, JWT_REFRESH_TOKEN, (error, decoded) => {

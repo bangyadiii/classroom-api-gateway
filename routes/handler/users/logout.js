@@ -7,8 +7,7 @@ module.exports = async (req, res) => {
         const response = await api.post("/api/v1/auth/logout", req.body);
 
         const result = response.data;
-
-        return res.status(result.code).json(result);
+        return res.status(response.status).json(result);
     } catch (error) {
         console.log("Error", error.message);
         if (error.code === "ECONNREFUSED") {
