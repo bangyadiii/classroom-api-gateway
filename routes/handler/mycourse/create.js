@@ -6,7 +6,7 @@ const api = apiAdapter(URL_SERVICE_COURSE);
 module.exports = async (req, res, next) => {
     try {
         const userId = req.user.data.id;
-        const courseId = req.body.courseId;
+        const courseId = req.body.course_id;
         const result = await api.post("/api/v1/mycourses", {
             user_id: userId,
             course_id: courseId,
